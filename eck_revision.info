@@ -1,0 +1,5 @@
+name = ECK Revision
+description = Enables revision for ECK Entity Types.
+dependencies[] = eck
+package = ECK
+core = 7.x
