@@ -13,7 +13,7 @@ $plugin = array(
   'schema' => 'eck_revision_property_schema',
   'property_info' => 'eck_revision_property_property_info',
   'entity_info' => 'eck_revision_property_entity_info',
-  'entity_save' => 'eck_revision_property_entity_form_submit',
+  'entity_save' => 'eck_revision_property_entity_save',
   'property_add' => 'eck_revision_property_property_add',
   'property_remove' => 'eck_revision_property_property_remove',
   'default_widget' => 'eck_revision_revision_property_widget',
@@ -138,7 +138,7 @@ function eck_revision_property_entity_info($property, $var) {
   return $info;
 }
 
-function eck_revision_property_entity_form_submit($property, $vars) {
+function eck_revision_property_entity_save($property, $vars) {
   $entity = $vars['entity'];
   $values = $vars['form_state']['values'];
 
@@ -154,6 +154,4 @@ function eck_revision_property_entity_form_submit($property, $vars) {
       $entity->revision_log = NULL;
     }
   }
-
-  return $entity;
 }
