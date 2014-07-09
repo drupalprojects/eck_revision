@@ -28,29 +28,6 @@ function eck_revision_eck_default_properties() {
 }
 
 /**
- * Implements hook_schema_alter().
- */
-function eck_revision_schema_alter(&$schema) {
-  if (db_table_exists('eck_entity_type')) {
-
-    // When something requests an entity's info, the hook_schema is called to
-    // get the information about the entity's table, so we need to provide that
-    // information in the hook.
-
-    // Get all the entity types that have been create (all the rows in eck_entity_type table).
-    foreach (EntityType::loadAll() as $entity_type) {
-      // Allow properties to modify the schema
-      $entity_type_schema =
-      eck_property_behavior_invoke_plugin_alter($entity_type, 'schema', array('entity_type' => $entity_type, 'schema' => $schema));
-
-      if ($entity_type_schema) {
-        $schema = array_merge($schema, $entity_type_schema);
-      }
-    }
-  }
-}
-
-/**
  * Returns a list of all the existing revision numbers.
  *
  * @param $entity_type
