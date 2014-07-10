@@ -74,9 +74,8 @@ function eck_revision_property_property_info($property, $vars) {
 
 function eck_revision_property_schema($property, $vars) {
   $entity_type = $vars['entity_type'];
-  $schema = array();
-  $schema["eck_{$entity_type->name}_revision"] = eck_revision__entity_type__schema($entity_type);
-  return $schema;
+  $vars['schema']["eck_{$entity_type->name}_revision"] = eck_revision__entity_type__schema($entity_type);
+  return $vars;
 }
 
 function eck_revision_property_property_add($property, $var) {
