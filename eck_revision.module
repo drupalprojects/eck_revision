@@ -82,11 +82,12 @@ function eck_revision_menu() {
         $crud_info = get_bundle_crud_info($entity_type->name, $bundle->name);
         if (isset($crud_info['view']) && !empty($crud_info['view'])) {
           $info = $crud_info['view'];
+          $arg_ref = (isset($info['entity_id'])) ? $info['entity_id'] : 2;
 
           $items[$info['path'] . '/revisions'] = array(
             'title' => 'Revisions',
             'page callback' => 'eck_revision_revision_overview',
-            'page arguments' => array($entity_type->name, 2),
+            'page arguments' => array($entity_type->name, $arg_ref),
             'access callback' => '_eck_revision_revision_access',
             'access arguments' => array('view', $entity_type->name, $bundle->name),
             'weight' => 2,
@@ -97,16 +98,15 @@ function eck_revision_menu() {
           $items[$info['path'] . '/revisions/%/view'] = array(
             'title' => 'Revisions',
             'page callback' => 'eck_revision_revision_view',
-            'page arguments' => array($entity_type->name, 4),
+            'page arguments' => array($entity_type->name, $arg_ref),
             'access callback' => '_eck_revision_revision_access',
             'access arguments' => array('view', $entity_type->name, $bundle->name),
           );
 
           $items[$info['path'] . '/revisions/%/revert'] = array(
             'title' => 'Revert to earlier revision',
-            'load arguments' => array(3),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('eck_revision_revision_revert_confirm', $entity_type->name, 2, 4),
+            'page arguments' => array('eck_revision_revision_revert_confirm', $entity_type->name, $arg_ref, ($arg_ref+2)),
             'access callback' => '_eck_revision_revision_access',
             'access arguments' => array('update', $entity_type->name, $bundle->name),
             'file' => 'eck_revision.pages.inc',
@@ -114,9 +114,8 @@ function eck_revision_menu() {
 
           $items[$info['path'] . '/revisions/%/delete'] = array(
             'title' => 'Delete earlier revision',
-            'load arguments' => array(3),
             'page callback' => 'drupal_get_form',
-            'page arguments' => array('eck_revision_revision_delete_confirm', $entity_type->name, 2, 4),
+            'page arguments' => array('eck_revision_revision_delete_confirm', $entity_type->name, $arg_ref, ($arg_ref+2)),
             'access callback' => '_eck_revision_revision_access',
             'access arguments' => array('delete', $entity_type->name, $bundle->name),
             'file' => 'eck_revision.pages.inc',
@@ -480,6 +479,7 @@ function eck_revision_eck_entity_type_delete($entity_type) {
  */
 function eck_revision_get_real_path($path = array(), $entity = NULL) {
 
+  $path = eck_revision_clean_path($path);
   $path_args = explode("/", $path);
   $key = array_search("%", $path_args);
 
@@ -488,6 +488,20 @@ function eck_revision_get_real_path($path = array(), $entity = NULL) {
   }
 
   return implode("/", $path_args);
+}
+
+/**
+ * Clean Path
+ * Replace any %argument with % in path.
+ */
+function eck_revision_clean_path($path) {
+  $paths = explode("/", $path);
+  foreach ($paths as $key => $path) {
+    if (strlen($path) > 1 && preg_match('/%/', $path)) {
+      $paths[$key] = "%";
+    }
+  }
+  return implode("/", $paths);
 }
 
 /**

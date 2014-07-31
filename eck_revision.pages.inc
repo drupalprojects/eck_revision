@@ -9,8 +9,14 @@
  * Generates an overview table of older revisions of an entity.
  */
 function eck_revision_revision_overview($entity_type, $entity_id) {
-  // Load entity
-  $entity = reset(entity_load($entity_type, array($entity_id)));
+
+  if (!is_object($entity_id)) {
+    // Load entity
+    $entity = reset(entity_load($entity_type, array($entity_id)));
+  }
+  else {
+    $entity = $entity_id;
+  }
 
   drupal_set_title(t('Revisions for %title', array('%title' => entity_label($entity_type, $entity))), PASS_THROUGH);
 
@@ -91,6 +97,11 @@ function eck_revision_revision_overview($entity_type, $entity_id) {
  */
 function eck_revision_revision_revert_confirm($form, $form_state, $entity_type, $entity_id, $revision_id) {
 
+  // If Entity ID is entity object then set ID.
+  if (is_object($entity_id)) {
+    $entity_id = $entity_id->id;
+  }
+
   // Load revision
   $revision = entity_revision_load($entity_type, array($revision_id));
 
@@ -134,6 +145,12 @@ function eck_revision_revision_revert_confirm_submit($form, &$form_state) {
  * Asks for confirmation of the deletion to prevent against CSRF attacks.
  */
 function eck_revision_revision_delete_confirm($form, $form_state, $entity_type, $entity_id, $revision_id) {
+
+  // If Entity ID is entity object then set ID.
+  if (is_object($entity_id)) {
+    $entity_id = $entity_id->id;
+  }
+
   // Load revision
   $revision = entity_revision_load($entity_type, array($revision_id));
 
