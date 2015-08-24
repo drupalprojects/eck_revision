@@ -139,7 +139,7 @@ function eck_revision_property_entity_info($property, $var) {
 
 function eck_revision_property_entity_save($property, $vars) {
   $entity = $vars['entity'];
-  $values = $vars['form_state']['values'];
+  $values = isset($vars['form_state']['values']) ? $vars['form_state']['values'] : array();
 
   if (isset($values['revision_information']['revision']) && $values['revision_information']['revision']) {
     $entity->is_new = FALSE;
