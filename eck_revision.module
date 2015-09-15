@@ -98,7 +98,7 @@ function eck_revision_menu() {
           $items[$info['path'] . '/revisions/%/view'] = array(
             'title' => 'Revisions',
             'page callback' => 'eck_revision_revision_view',
-            'page arguments' => array($entity_type->name, $arg_ref),
+            'page arguments' => array($entity_type->name, ($arg_ref+2)),
             'access callback' => '_eck_revision_revision_access',
             'access arguments' => array('view', $entity_type->name, $bundle->name),
           );
